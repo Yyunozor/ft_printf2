@@ -6,7 +6,7 @@
 /*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 17:08:45 by anpayot           #+#    #+#             */
-/*   Updated: 2024/12/22 17:14:03 by anpayot          ###   ########.fr       */
+/*   Updated: 2024/12/22 17:59:53 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int		x_int(t_format *fmt);
 int		x_uint(t_format *fmt);
 int		x_hex(t_format *fmt, const char *base);
 int		x_percent(void);
-void	ft_putunbr_base(unsigned long n, const char *base, int blen, int *len);
+int		ft_putunbr_base(unsigned long n, const char *base, int blen, int *len);
+int		handle_write_str(const char *str, int *len);
 
 #endif

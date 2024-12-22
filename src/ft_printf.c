@@ -6,7 +6,7 @@
 /*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 15:08:45 by anpayot           #+#    #+#             */
-/*   Updated: 2024/12/22 17:18:04 by anpayot          ###   ########.fr       */
+/*   Updated: 2024/12/22 18:00:36 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,32 @@ static int	x_format(t_format *fmt)
 		ret = x_hex(fmt, HEX_UPPER);
 	else if (fmt->type == '%')
 	{
-		fmt->len += write(1, "%", 1);
-		ret = 1;
+		ret = x_percent();
+		if (ret != -1)
+			fmt->len += 1;
 	}
 	return (ret);
+}
+
+static int	handle_write(int fd, const void *buf, size_t count, int *total_len)
+{
+	int	written;
+
+	written = write(fd, buf, count);
+	if (written == -1)
+		return (-1);
+	*total_len += written;
+	return (1);
+}
+
+static int	process_format(const char *format, t_format *fmt, int *i)
+{
+	if (format[*i] == '%' && format[*i + 1])
+	{
+		fmt->type = format[++(*i)];
+		return (x_format(fmt));
+	}
+	return (handle_write(1, &format[*i], 1, &fmt->len));
 }
 
 /**
@@ -54,6 +76,7 @@ int	ft_printf(const char *format, ...)
 {
 	t_format	fmt;
 	int			i;
+	int			ret;
 
 	if (!format)
 		return (-1);
@@ -62,13 +85,9 @@ int	ft_printf(const char *format, ...)
 	va_start(fmt.args, format);
 	while (format[i])
 	{
-		if (format[i] == '%' && format[i + 1])
-		{
-			fmt.type = format[++i];
-			x_format(&fmt);
-		}
-		else
-			fmt.len += write(1, &format[i], 1);
+		ret = process_format(format, &fmt, &i);
+		if (ret == -1)
+			return (-1);
 		i++;
 	}
 	va_end(fmt.args);

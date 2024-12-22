@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_format_handlers.c                               :+:      :+:    :+:   */
+/*   ft_format.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 15:08:34 by anpayot           #+#    #+#             */
-/*   Updated: 2024/12/22 17:30:16 by anpayot          ###   ########.fr       */
+/*   Updated: 2024/12/22 17:43:37 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,13 @@
 int	x_char(t_format *fmt)
 {
 	char	c;
+	int		written;
 
 	c = va_arg(fmt->args, int);
-	fmt->len += write(1, &c, 1);
+	written = write(1, &c, 1);
+	if (written == -1)
+		return (-1);
+	fmt->len += written;
 	return (1);
 }
 
@@ -34,15 +38,15 @@ int	x_char(t_format *fmt)
 int	x_str(t_format *fmt)
 {
 	const char	*str;
-	const char	*ptr;
+	int			written;
 
 	str = va_arg(fmt->args, char *);
 	if (!str)
 		str = "(null)";
-	ptr = str;
-	while (*ptr)
-		ptr++;
-	fmt->len += write(1, str, ptr - str);
+	written = write(1, str, ft_strlen(str));
+	if (written == -1)
+		return (-1);
+	fmt->len += written;
 	return (1);
 }
 
@@ -54,11 +58,22 @@ int	x_str(t_format *fmt)
 int	x_ptr(t_format *fmt)
 {
 	unsigned long	ptr;
+	int				written;
 
 	ptr = (unsigned long)va_arg(fmt->args, void *);
-	fmt->len += write(1, "0x", 2);
-	ft_putunbr_base(ptr, HEX_LOWER, 16, &fmt->len);
-	return (1);
+	if (ptr == 0)
+	{
+		written = write(1, "0x0", 3);
+		if (written == -1)
+			return (-1);
+		fmt->len += written;
+		return (1);
+	}
+	written = write(1, "0x", 2);
+	if (written == -1)
+		return (-1);
+	fmt->len += written;
+	return (ft_putunbr_base(ptr, HEX_LOWER, 16, &fmt->len));
 }
 
 /**
@@ -67,6 +82,10 @@ int	x_ptr(t_format *fmt)
  */
 int	x_percent(void)
 {
-	write(1, "%", 1);
+	int	written;
+
+	written = write(1, "%", 1);
+	if (written == -1)
+		return (-1);
 	return (1);
 }
