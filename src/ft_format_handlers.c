@@ -6,7 +6,7 @@
 /*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 15:08:34 by anpayot           #+#    #+#             */
-/*   Updated: 2024/12/22 17:18:00 by anpayot          ###   ########.fr       */
+/*   Updated: 2024/12/22 17:30:16 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,22 @@ int	x_char(t_format *fmt)
 }
 
 /**
- * @brief Handles string format specifier (%s)
+ * @brief Handles string format specifier (%s) with optimized pointer arithmetic
  * @param fmt Pointer to format structure containing args and state
  * @return 1 on success
  */
 int	x_str(t_format *fmt)
 {
-	char	*str;
+	const char	*str;
+	const char	*ptr;
 
 	str = va_arg(fmt->args, char *);
 	if (!str)
 		str = "(null)";
-	while (*str)
-		fmt->len += write(1, str++, 1);
+	ptr = str;
+	while (*ptr)
+		ptr++;
+	fmt->len += write(1, str, ptr - str);
 	return (1);
 }
 
