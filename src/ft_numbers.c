@@ -5,67 +5,75 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/22 15:08:53 by anpayot           #+#    #+#             */
-/*   Updated: 2024/12/22 17:59:17 by anpayot          ###   ########.fr       */
+/*   Created: 2024/12/22 15:08:34 by anpayot           #+#    #+#             */
+/*   Updated: 2024/12/24 23:41:15 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_printf.h"
+#include "../libft/libft.h"
+#include <stdarg.h>
 
-int	handle_write_str(const char *str, int *len)
-{
-	int	written;
-
-	written = write(1, str, ft_strlen(str));
-	if (written == -1)
-		return (-1);
-	*len += written;
-	return (1);
-}
-
-int	ft_putunbr_base(unsigned long n, const char *base, int blen, int *len)
+/**
+ * @brief Convert number to string in specified base
+ * @param n Number to convert
+ * @param base Base string containing characters
+ * @param blen Length of base
+ * @param p Pointer to printf structure
+ * @return Result of buffer addition or -1 on error
+ */
+int	convert_nb(unsigned long n, const char *base, int blen, t_printf *p)
 {
 	char	buf[21];
 	char	*ptr;
 
-	ptr = buf + 20;
+	ptr = buf + sizeof(buf) - 1;
 	*ptr = '\0';
 	if (n == 0)
 		*--ptr = base[0];
-	while (n > 0)
+	while (n)
 	{
 		*--ptr = base[n % blen];
 		n /= blen;
 	}
-	return (handle_write_str(ptr, len));
+	return (add_to_buffer(p, ptr, ft_strlen(ptr)));
 }
 
 /**
- * @brief Optimized integer handler with direct buffer manipulation
- * @param fmt Pointer to format structure containing args and state
- * @return 1 on success
+ * @brief Handle signed integer conversion
+ * @param p Pointer to printf structure
+ * @return Result of conversion or -1 on error
  */
-int	x_int(t_format *fmt)
+static int	x_uint(t_printf *p)
 {
-	char	buf[12];
-	char	*ptr;
 	long	num;
-	int		n;
 
-	n = va_arg(fmt->args, int);
-	num = n;
-	ptr = buf + 11;
-	*ptr = '\0';
-	if (n < 0)
-		num = -num;
-	if (num == 0)
-		*--ptr = '0';
-	while (num > 0)
+	num = va_arg(p->args, int);
+	if (num < 0)
 	{
-		*--ptr = '0' + (num % 10);
-		num /= 10;
+		if (add_to_buffer(p, "-", 1) < 0)
+			return (-1);
+		num = -num;
 	}
-	if (n < 0)
-		*--ptr = '-';
-	return (handle_write_str(ptr, &fmt->len));
+	return (convert_nb(num, "0123456789", 10, p));
+}
+
+/**
+ * @brief Handle numeric format specifiers (d, i, u, x, X)
+ * @param p Pointer to printf structure
+ * @param type Format specifier character
+ * @return Result of number conversion or -1 on error
+ */
+int	x_numbers(t_printf *p, char type)
+{
+	if (type == 'd' || type == 'i')
+		return (x_uint(p));
+	if (type == 'u')
+		return (convert_nb(va_arg(p->args, unsigned int),
+				"0123456789", 10, p));
+	if (type == 'x')
+		return (convert_nb(va_arg(p->args, unsigned int),
+				HEX_LOWER, 16, p));
+	return (convert_nb(va_arg(p->args, unsigned int),
+			HEX_UPPER, 16, p));
 }
