@@ -16,7 +16,6 @@
 - [Usage Examples](#-usage-examples)
 - [Building & Testing](#-building--testing)
 - [Project Structure](#-project-structure)
-- [Contributing](#-contributing)
 
 ## 🎯 Overview
 
@@ -155,24 +154,9 @@ ft_printf/
 └── Makefile
 ```
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit changes
-4. Push to branch
-5. Open a Pull Request
-
 ## 📋 Known Limitations
 
 - No floating point support
 - No format flags support
 - No field width/precision
 - Single-threaded operation
-
-## 📜 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-Made with ❤️ by [anpayot]
