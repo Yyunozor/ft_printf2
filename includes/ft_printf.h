@@ -6,7 +6,7 @@
 /*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 17:08:45 by anpayot           #+#    #+#             */
-/*   Updated: 2024/12/24 23:40:32 by anpayot          ###   ########.fr       */
+/*   Updated: 2024/12/25 00:05:03 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int		add_to_buffer(t_printf *p, const char *str, int len);
  * @param type Format specifier character
  * @return Result of format handler or -1 on error
  */
-int		x_format(t_printf *p, char type);
+int		x_formats(t_printf *p, char type);
 
 /**
  * @brief Handle numeric format specifiers
@@ -86,6 +86,6 @@ int		x_numbers(t_printf *p, char type);
  * @param p Pointer to printf structure
  * @return Result of buffer addition or -1 on error
  */
-int		convert_nb(unsigned long n, const char *base, int blen, t_printf *p);
+int		x_nbr(unsigned long n, const char *base, int blen, t_printf *p);
 
 #endif

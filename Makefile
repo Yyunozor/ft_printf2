@@ -5,7 +5,6 @@ CFLAGS = -Wall -Wextra -Werror
 # Source files
 SRC_DIR = src/
 SRCS = $(SRC_DIR)ft_printf.c \
-       $(SRC_DIR)ft_buffer.c \
        $(SRC_DIR)ft_formats.c \
        $(SRC_DIR)ft_numbers.c
 

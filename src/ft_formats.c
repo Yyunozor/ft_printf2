@@ -6,13 +6,12 @@
 /*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 13:07:39 by anpayot           #+#    #+#             */
-/*   Updated: 2024/12/24 23:40:00 by anpayot          ###   ########.fr       */
+/*   Updated: 2024/12/25 00:08:03 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_printf.h"
 #include "../libft/libft.h"
-#include <stdarg.h>
 
 /**
  * @brief Handle character format specifier (%c)
@@ -32,7 +31,7 @@ static int	x_char(t_printf *p)
  * @param p Pointer to printf structure
  * @return Result of buffer addition or -1 on error
  */
-static int	x_string(t_printf *p)
+static int	x_str(t_printf *p)
 {
 	const char	*str;
 
@@ -47,7 +46,7 @@ static int	x_string(t_printf *p)
  * @param p Pointer to printf structure
  * @return Result of buffer addition or -1 on error
  */
-static int	x_pointer(t_printf *p)
+static int	x_ptr(t_printf *p)
 {
 	unsigned long	ptr;
 
@@ -56,18 +55,18 @@ static int	x_pointer(t_printf *p)
 		return (add_to_buffer(p, "0x0", 3));
 	if (add_to_buffer(p, "0x", 2) < 0)
 		return (-1);
-	return (convert_nb(ptr, HEX_LOWER, 16, p));
+	return (x_nbr(ptr, HEX_LOWER, 16, p));
 }
 
-int	x_format(t_printf *p, char type)
+int	x_formats(t_printf *p, char type)
 {
 	p->type = type;
 	if (type == 'c')
 		return (x_char(p));
 	if (type == 's')
-		return (x_string(p));
+		return (x_str(p));
 	if (type == 'p')
-		return (x_pointer(p));
+		return (x_ptr(p));
 	if (type == '%')
 		return (add_to_buffer(p, "%", 1));
 	return (x_numbers(p, type));

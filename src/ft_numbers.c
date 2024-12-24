@@ -6,7 +6,7 @@
 /*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 15:08:34 by anpayot           #+#    #+#             */
-/*   Updated: 2024/12/24 23:41:15 by anpayot          ###   ########.fr       */
+/*   Updated: 2024/12/25 00:08:03 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
  * @param p Pointer to printf structure
  * @return Result of buffer addition or -1 on error
  */
-int	convert_nb(unsigned long n, const char *base, int blen, t_printf *p)
+int	x_nbr(unsigned long n, const char *base, int blen, t_printf *p)
 {
 	char	buf[21];
 	char	*ptr;
@@ -44,7 +44,7 @@ int	convert_nb(unsigned long n, const char *base, int blen, t_printf *p)
  * @param p Pointer to printf structure
  * @return Result of conversion or -1 on error
  */
-static int	x_uint(t_printf *p)
+static int	x_int(t_printf *p)
 {
 	long	num;
 
@@ -55,7 +55,7 @@ static int	x_uint(t_printf *p)
 			return (-1);
 		num = -num;
 	}
-	return (convert_nb(num, "0123456789", 10, p));
+	return (x_nbr(num, "0123456789", 10, p));
 }
 
 /**
@@ -67,13 +67,13 @@ static int	x_uint(t_printf *p)
 int	x_numbers(t_printf *p, char type)
 {
 	if (type == 'd' || type == 'i')
-		return (x_uint(p));
+		return (x_int(p));
 	if (type == 'u')
-		return (convert_nb(va_arg(p->args, unsigned int),
+		return (x_nbr(va_arg(p->args, unsigned int),
 				"0123456789", 10, p));
 	if (type == 'x')
-		return (convert_nb(va_arg(p->args, unsigned int),
+		return (x_nbr(va_arg(p->args, unsigned int),
 				HEX_LOWER, 16, p));
-	return (convert_nb(va_arg(p->args, unsigned int),
+	return (x_nbr(va_arg(p->args, unsigned int),
 			HEX_UPPER, 16, p));
 }
