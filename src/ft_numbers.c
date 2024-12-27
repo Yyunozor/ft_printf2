@@ -4,76 +4,118 @@
 /*   ft_numbers.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
+/*                                                +#+#+#+#+#+   */
 /*   Created: 2024/12/22 15:08:34 by anpayot           #+#    #+#             */
-/*   Updated: 2024/12/25 00:08:03 by anpayot          ###   ########.fr       */
+/*   Updated: 2024/12/27 14:09:13 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_printf.h"
 #include "../libft/libft.h"
-#include <stdarg.h>
 
 /**
  * @brief Convert number to string in specified base
  * @param n Number to convert
  * @param base Base string containing characters
  * @param blen Length of base
- * @param p Pointer to printf structure
- * @return Result of buffer addition or -1 on error
+ * @return Length of the converted string or -1 on error
  */
-int	x_nbr(unsigned long n, const char *base, int blen, t_printf *p)
+int	x_nbr(unsigned long n, const char *base, int blen)
 {
-	char	buf[21];
-	char	*ptr;
+	char			buf[21];
+	char			*ptr;
+	int				len;
+	unsigned long	num;
 
 	ptr = buf + sizeof(buf) - 1;
 	*ptr = '\0';
-	if (n == 0)
-		*--ptr = base[0];
-	while (n)
+	num = n;
+	if (num == 0)
 	{
-		*--ptr = base[n % blen];
-		n /= blen;
+		*--ptr = base[0];
 	}
-	return (add_to_buffer(p, ptr, ft_strlen(ptr)));
+	else
+	{
+		while (num)
+		{
+			*--ptr = base[num % blen];
+			num /= blen;
+		}
+	}
+	len = ft_strlen(ptr);
+	if (write(1, ptr, len) < 0)
+		return (-1);
+	return (len);
 }
 
 /**
  * @brief Handle signed integer conversion
  * @param p Pointer to printf structure
- * @return Result of conversion or -1 on error
+ * @return 1 on success or -1 on error
  */
 static int	x_int(t_printf *p)
 {
 	long	num;
+	int		len;
 
 	num = va_arg(p->args, int);
 	if (num < 0)
 	{
-		if (add_to_buffer(p, "-", 1) < 0)
+		if (write(1, "-", 1) < 0)
 			return (-1);
+		p->len++;
 		num = -num;
 	}
-	return (x_nbr(num, "0123456789", 10, p));
+	len = x_nbr(num, "0123456789", 10);
+	if (len < 0)
+		return (-1);
+	p->len += len;
+	return (1);
+}
+
+/**
+ * @brief Handle hexadecimal conversion
+ * @param p Pointer to printf structure
+ * @param type Format specifier character
+ * @return 1 on success or -1 on error
+ */
+static int	x_hex(t_printf *p, char type)
+{
+	int			len;
+	const char	*hex_base;
+
+	if (type == 'x')
+		hex_base = HEX_LOWER;
+	else
+		hex_base = HEX_UPPER;
+	len = x_nbr(va_arg(p->args, unsigned int), hex_base, 16);
+	if (len < 0)
+		return (-1);
+	p->len += len;
+	return (1);
 }
 
 /**
  * @brief Handle numeric format specifiers (d, i, u, x, X)
  * @param p Pointer to printf structure
  * @param type Format specifier character
- * @return Result of number conversion or -1 on error
+ * @return 1 on success or -1 on error
  */
 int	x_numbers(t_printf *p, char type)
 {
+	int	len;
+
 	if (type == 'd' || type == 'i')
 		return (x_int(p));
 	if (type == 'u')
-		return (x_nbr(va_arg(p->args, unsigned int),
-				"0123456789", 10, p));
-	if (type == 'x')
-		return (x_nbr(va_arg(p->args, unsigned int),
-				HEX_LOWER, 16, p));
-	return (x_nbr(va_arg(p->args, unsigned int),
-			HEX_UPPER, 16, p));
+	{
+		len = x_nbr(va_arg(p->args, unsigned int), "0123456789", 10);
+		if (len < 0)
+			return (-1);
+		p->len += len;
+		return (1);
+	}
+	if (type == 'x' || type == 'X')
+		return (x_hex(p, type));
+	return (-1);
 }
