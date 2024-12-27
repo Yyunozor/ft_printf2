@@ -13,13 +13,6 @@
 #include "../includes/ft_printf.h"
 #include "../libft/libft.h"
 
-/**
- * @brief Convert number to string in specified base
- * @param n Number to convert
- * @param base Base string containing characters
- * @param blen Length of base
- * @return Length of the converted string or -1 on error
- */
 int	x_nbr(unsigned long n, const char *base, int blen)
 {
 	char			buf[21];
@@ -48,11 +41,6 @@ int	x_nbr(unsigned long n, const char *base, int blen)
 	return (len);
 }
 
-/**
- * @brief Handle signed integer conversion
- * @param p Pointer to printf structure
- * @return 1 on success or -1 on error
- */
 static int	x_int(t_printf *p)
 {
 	long	num;
@@ -73,12 +61,6 @@ static int	x_int(t_printf *p)
 	return (1);
 }
 
-/**
- * @brief Handle hexadecimal conversion
- * @param p Pointer to printf structure
- * @param type Format specifier character
- * @return 1 on success or -1 on error
- */
 static int	x_hex(t_printf *p, char type)
 {
 	int			len;
@@ -95,12 +77,6 @@ static int	x_hex(t_printf *p, char type)
 	return (1);
 }
 
-/**
- * @brief Handle numeric format specifiers (d, i, u, x, X)
- * @param p Pointer to printf structure
- * @param type Format specifier character
- * @return 1 on success or -1 on error
- */
 int	x_numbers(t_printf *p, char type)
 {
 	int	len;

@@ -6,7 +6,7 @@
 /*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 13:07:39 by anpayot           #+#    #+#             */
-/*   Updated: 2024/12/27 13:49:24 by anpayot          ###   ########.fr       */
+/*   Updated: 2024/12/27 14:33:13 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include "../libft/libft.h"
 
 /**
- * @brief Handle character format specifier (%c)
- * @param p Pointer to printf structure
- * @return Result of buffer addition or -1 on error
+ * @brief Handles the character format specifier ('c')
+ * @param p Pointer to the printf structure
+ * @return 1 on success, -1 on error
  */
 static int	x_char(t_printf *p)
 {
@@ -30,9 +30,9 @@ static int	x_char(t_printf *p)
 }
 
 /**
- * @brief Handle string format specifier (%s)
- * @param p Pointer to printf structure
- * @return Result of buffer addition or -1 on error
+ * @brief Handles the string format specifier ('s')
+ * @param p Pointer to the printf structure
+ * @return 1 on success, -1 on error
  */
 static int	x_str(t_printf *p)
 {
@@ -50,9 +50,9 @@ static int	x_str(t_printf *p)
 }
 
 /**
- * @brief Handle pointer format specifier (%p)
- * @param p Pointer to printf structure
- * @return Result of buffer addition or -1 on error
+ * @brief Handles the pointer format specifier ('p')
+ * @param p Pointer to the printf structure
+ * @return 1 on success, -1 on error
  */
 static int	x_ptr(t_printf *p)
 {
@@ -77,6 +77,12 @@ static int	x_ptr(t_printf *p)
 	return (1);
 }
 
+/**
+ * @brief Routes format specifiers to their respective handling functions
+ * @param p Pointer to the printf structure
+ * @param type The format specifier character
+ * @return 1 on success, -1 on error
+ */
 int	x_formats(t_printf *p, char type)
 {
 	p->type = type;

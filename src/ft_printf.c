@@ -12,11 +12,21 @@
 
 #include "../includes/ft_printf.h"
 
+/**
+ * @brief Initializes the printf structure
+ * @param p Pointer to the t_printf structure to initialize
+ */
 static void	init_printf(t_printf *p)
 {
 	p->len = 0;
 }
 
+/**
+ * @brief Custom implementation of printf function
+ * @param format Format string containing the text and format specifiers
+ * @param ... Variable arguments corresponding to the format specifiers
+ * @return Total number of characters printed, or -1 on error
+ */
 int	ft_printf(const char *format, ...)
 {
 	t_printf	p;
