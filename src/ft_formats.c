@@ -6,7 +6,7 @@
 /*   By: anpayot <anpayot@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 13:07:39 by anpayot           #+#    #+#             */
-/*   Updated: 2024/12/27 14:33:13 by anpayot          ###   ########.fr       */
+/*   Updated: 2024/12/28 13:14:20 by anpayot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static int	x_ptr(t_printf *p)
 		p->len++;
 		return (1);
 	}
-	len = x_nbr(ptr, HEX_LOWER, 16);
+	len = x_nbr_base(ptr, HEX_LOWER, 16);
 	if (len < 0)
 		return (-1);
 	p->len += len;
@@ -99,5 +99,5 @@ int	x_formats(t_printf *p, char type)
 		p->len++;
 		return (1);
 	}
-	return (x_numbers(p, type));
+	return (ft_print_numbers(p, type));
 }
